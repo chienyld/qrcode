@@ -33,13 +33,7 @@
         padding: 0 !important;
     }
     #html5-qrcode-anchor-scan-type-change{
-        background-color: rgb(27, 129, 184);
-        padding: 10px;
-        border-radius: 20px;
-        text-decoration: none !important;
-        color: aliceblue;
-        font-weight: bolder;
-        font-family: Arial, Helvetica, sans-serif;
+        display: none;
     }
     #html5-qrcode-button-file-selection{
         background-color: rgb(62, 179, 242);
@@ -97,9 +91,13 @@
                 result: ''
             },
             created: function () {
+                
                 this.$root.$on('decodedCode', function (decodedText, decodedResult) {
                     this.decodedText = decodedText;
                 }.bind(this));
+            },
+            mounted:function(){
+                document.getElementById('html5-qrcode-anchor-scan-type-change').click();
             }
         });
     </script>
