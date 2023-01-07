@@ -1,0 +1,108 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR CODE</title>
+</head>
+<style>
+    img{
+        display: none;
+    }
+    #html5-qrcode-button-camera-permission{
+        display: none;
+    }
+    #app{
+        width:100%;
+        margin: auto;
+    }
+    #qr-code-full-region{
+        width: 400px !important;
+        margin: auto;
+        border: none !important;
+    }
+    .section{
+        width: 90vw !important;
+        width:100%;
+        margin:0 !important;
+        padding: 0 !important;
+    }
+    html{
+        margin:0 !important;
+        padding: 0 !important;
+    }
+    #html5-qrcode-anchor-scan-type-change{
+        background-color: rgb(27, 129, 184);
+        padding: 10px;
+        border-radius: 20px;
+        text-decoration: none !important;
+        color: aliceblue;
+        font-weight: bolder;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    #html5-qrcode-button-file-selection{
+        background-color: rgb(62, 179, 242);
+        padding: 30px;
+        border-radius: 20px;
+        color: aliceblue;
+        font-weight: bolder;
+        font-family: Arial, Helvetica, sans-serif;
+        border: none;
+    }
+    
+</style>
+<body>
+    <div id="app">
+        <div class="section" style="margin: auto;">
+            <qrcode-scanner 
+                v-bind:qrbox="250"
+                v-bind:fps="10">
+            </qrcode-scanner>
+        </div>
+        <div style="margin-bottom: 20px;">{{ result }}</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        Vue.component('qrcode-scanner', {
+            props: {
+                qrbox: Number,
+                fps: Number,
+            },
+            template: `<div id="qr-code-full-region"></div>`,
+            mounted: function () {
+                var $this = this;
+                var config = { fps: this.fps ? this.fps : 10 };
+                if (this.qrbox) {
+                    config['qrbox'] = this.qrbox;
+                }
+
+                function onScanSuccess(decodedText, decodedResult) {
+                    $this.$root.$emit('decodedCode', decodedText, decodedResult);
+                    window.location.replace(decodedText);
+                }
+
+                var html5QrcodeScanner = new Html5QrcodeScanner(
+                    "qr-code-full-region", config);
+                html5QrcodeScanner.render(onScanSuccess);
+            }
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                header: 'Html5-qrcode using vue.js',
+                result: ''
+            },
+            created: function () {
+                this.$root.$on('decodedCode', function (decodedText, decodedResult) {
+                    this.decodedText = decodedText;
+                }.bind(this));
+            }
+        });
+    </script>
+</body>
+
+</html>
